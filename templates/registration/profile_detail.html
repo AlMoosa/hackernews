@@ -1,4 +1,10 @@
+{% load static %}
 {{object.user.username}}
 {{object.info}}
 {{object.age}}
 {{object.gender}}
+{% if user.profile.avatar %}
+        <img src="{{profile.avatar.url}}" style="width: 150px;" alt="">
+{% else %}
+        <p>You don't have your profile created. Contact site admin.</p>
+{% endif %}

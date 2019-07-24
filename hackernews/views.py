@@ -37,5 +37,6 @@ class ProfileDetailView(DetailView):
     context_object_name = "profile"
 
 
+
     
 

@@ -11,6 +11,10 @@ class User(AbstractUser):
         return self.username + " --- "+ self.fullname
 
 
+def upload_to(instance, filename):
+    return 'profile_images/{0}/{1}'.format(instance.user.pk, filename)
+
+
 class Profile(models.Model):
     CHOICES = (
         ("Male", "Male"),
@@ -20,23 +24,21 @@ class Profile(models.Model):
     info = models.TextField(max_length=500, blank=True, null=True)
     age = models.PositiveSmallIntegerField(default=1)
     gender = models.CharField(choices=CHOICES, max_length=10, null=True, blank=True)
-    default_profile_image = 'media/profile.jpg'
+    default_profile_image = 'profile.jpg'
     avatar = models.ImageField(
         default=default_profile_image,
-        upload_to='media/',
+        upload_to=upload_to,
         null=True,
-        blank=True
+        blank=True,
     )
 
     def get_absolute_url(self):
         return reverse('profile-detail', kwargs={'pk': self.pk})
 
-    def get_absolute_img_url(self):
-        return reverse('profile-detail', kwargs={'avatar': self.avatar})
-
 
     def __str__(self):
         return self.user.username
+
 
 
 @receiver(post_save, sender=User)
@@ -57,4 +59,3 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
-        
