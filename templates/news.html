@@ -1,0 +1,13 @@
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="text" name="title">
+    <input type="text" name="body">
+    <input type="text" name="link">
+    <button type="submit">
+        Submit
+    </button>
+</form>
+
+{% for x in news %}
+   <a href="{{x.link}}"> {{x.title}} </a> 
+{% endfor %}
