@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from hackernews.models import User, Profile
+from hackernews.models import User, Profile, News
 from django.forms import ModelForm
 
 
@@ -17,5 +17,10 @@ class ProfileForm(ModelForm):
         fields = (
             'avatar', 'info', 'age', 'gender'
         )
-
+class UpdateForm(ModelForm):
+    class Meta:
+        model = News
+        fields = (
+            'title', 'link'
+        )
 

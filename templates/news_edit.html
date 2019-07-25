@@ -1,0 +1,8 @@
+{% extends "bases/base.html" %}
+{% block content %}
+<form method="POST" action="{% url 'index' %}">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Edit</button>
+</form>
+{% endblock %}

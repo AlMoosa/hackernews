@@ -15,6 +15,8 @@ def upload_to(instance, filename):
     return 'profile_images/{0}/{1}'.format(instance.user.pk, filename)
 
 
+
+
 class Profile(models.Model):
     CHOICES = (
         ("Male", "Male"),
@@ -53,9 +55,31 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class News(models.Model):
-    title = models.CharField(max_length=255)
-    body = models.TextField()
-    link = models.CharField(max_length=255)
+    title = models.TextField()
+    # body = models.TextField()
+    link = models.TextField()
 
+    def get_absolute_url(self):
+        return reverse('news_detail', kwargs={'pk': self.pk})
+
+    def get_update_url(self):
+        return reverse('news_edit', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse('news_delete', kwargs={'pk': self.pk})
+
+ 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name="comments")
+    comment = models.CharField(max_length=255)
+    author = models.ForeignKey(User, on_delete=models.CASCADE,)
+
+    def __str__(self):
+        return self.comment
+
+    def get_absolute_url(self):
+        return reverse('index')

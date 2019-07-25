@@ -1,13 +1,49 @@
+{% extends 'bases/base.html' %}
+
+{% block content %}
+
 <form action="" method="POST">
     {% csrf_token %}
-    <input type="text" name="title">
-    <input type="text" name="body">
-    <input type="text" name="link">
     <button type="submit">
-        Submit
+        Parsing
     </button>
 </form>
+{% for x in page_object %}
+    <li><a href="{{x.link}}" target="_blank">{{x.title}}</a></li>
+    <span><a href="{{x.get_absolute_url}}"><button>Перейти</button></a></span>
+    <span><a href="{{x.get_update_url}}"><button>Изменить</button></a></span>
+    <span><a href="{{x.get_delete_url}}"><button>Удалить</button></a></span>
 
-{% for x in news %}
-   <a href="{{x.link}}"> {{x.title}} </a> 
+    
+
 {% endfor %}
+
+{% if is_paginated %}
+            <nav aria-label="...">
+              <ul class="pagination">
+                <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                  <a class='page-link' href='{{ prev_url }}' tabindex='-1'>Previous</a>
+                </li>
+
+                  {% for n in page_object.paginator.page_range %}
+
+                    {% if page_object.number == n %}
+                  <li class="page-item active">
+                    <a class="page-link" href="?page={{ n }}">{{ n }}<span
+                            class="sr-only">(current)</span></a>
+                  </li>
+                    {% elif n > page_object.number|add:-3 and n < page_object.number|add:3  %}
+
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ n }}">{{ n }}</a>
+                    </li>
+                    {% endif%}
+                  {% endfor %}
+                <li class="page-item {% if not next_url %} disabled {% endif %}">
+                  <a class="page-link" href="{{ next_url }}" tabindex="-1">Next</a>
+                </li>
+              </ul>
+            </nav>
+              {% endif %}
+
+ {% endblock %}
