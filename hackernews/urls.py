@@ -4,7 +4,7 @@ from hackernews.views import (
         ProfileDetailView, NewsDetailView, 
         NewsUpdateView, NewsDeleteView,
         add_comment_to_news,
-        NewsLikeToggle
+        NewsLikeToggle, NewsListViewSerializer
     )
 
 
@@ -18,5 +18,6 @@ urlpatterns = [
     path('news_delete/<int:pk>/', NewsDeleteView.as_view(), name='news_delete'),
     path('news/<int:pk>/comment/', add_comment_to_news, name='add_comment_to_news'),
     path('news_detail/<int:pk>/like/', NewsLikeToggle.as_view(), name='news_like'),
+    path('news/', NewsListViewSerializer.as_view()),
 
 ]

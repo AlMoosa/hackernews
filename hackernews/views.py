@@ -8,7 +8,8 @@ from hackernews.models import Profile , User, News
 from hackernews.scraping import Parser
 from django.core.paginator import Paginator
 from django.db.models import Q
-
+from rest_framework import generics
+from hackernews.serializers import NewsSerializer
 
 def main(request):
     return render(request, 'main.html', {})
@@ -127,4 +128,8 @@ class NewsLikeToggle(RedirectView):
                 obj.likes.add(user)
         return url_
 
+
+class NewsListViewSerializer(generics.ListAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
 

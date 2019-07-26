@@ -10,6 +10,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hackernews/', include('django.contrib.auth.urls')),
     path('', main , name="main"),
+    path('api/v1/', include('rest_framework.urls')),
+    path('api/v1/', include('hackernews.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

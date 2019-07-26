@@ -4,3 +4,4 @@ psycopg2
 psycopg2-binary
 python-decouple
 django-crispy-forms
+djangorestframework
