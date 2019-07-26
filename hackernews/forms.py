@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from hackernews.models import User, Profile, News
+from hackernews.models import User, Profile, News, Comment
 from django.forms import ModelForm
 
 
@@ -24,3 +24,9 @@ class UpdateForm(ModelForm):
             'title', 'link'
         )
 
+
+class CommentForm(ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('author', 'comment',)

@@ -32,9 +32,3 @@ class Parser:
                 'title': self.title,
             }
 
-            # self.result.append(result2['link']+result2['title'])
-# a = Parser()
-# a.get_all_links()
-# # print(a.link)
-# # print(a.title)
-# print(a.result)

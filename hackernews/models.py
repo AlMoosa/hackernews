@@ -58,6 +58,7 @@ class News(models.Model):
     title = models.TextField()
     # body = models.TextField()
     link = models.TextField()
+    likes = models.ManyToManyField(User, related_name='news_likes', blank=True)
 
     def get_absolute_url(self):
         return reverse('news_detail', kwargs={'pk': self.pk})
@@ -68,6 +69,8 @@ class News(models.Model):
     def get_delete_url(self):
         return reverse('news_delete', kwargs={'pk': self.pk})
 
+    def get_like_url(self):
+        return reverse('news_like', kwargs={'pk': self.pk})
  
     def __str__(self):
         return self.title
@@ -77,6 +80,7 @@ class Comment(models.Model):
     news = models.ForeignKey(News, on_delete=models.CASCADE, related_name="comments")
     comment = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE,)
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.comment

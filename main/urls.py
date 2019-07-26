@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from hackernews.views import main
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -8,6 +9,7 @@ urlpatterns = [
     path('testing/', include('testing.urls')),
     path('admin/', admin.site.urls),
     path('hackernews/', include('django.contrib.auth.urls')),
+    path('', main , name="main"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

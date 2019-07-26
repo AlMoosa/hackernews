@@ -1,17 +1,26 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from hackernews.forms import UserSignUpForm, UpdateForm
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.shortcuts import get_object_or_404
+from hackernews.forms import UserSignUpForm, UpdateForm, CommentForm
+from django.urls import reverse_lazy, reverse
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, RedirectView
 from hackernews.models import Profile , User, News
 from hackernews.scraping import Parser
 from django.core.paginator import Paginator
 from django.db.models import Q
 
 
+def main(request):
+    return render(request, 'main.html', {})
+
 
 def index(request):
-    news = News.objects.all()
+    search_query = request.GET.get('search','')
+
+    if search_query:
+        news = News.objects.filter(Q(title__icontains=search_query)| Q(link__icontains=search_query))
+    else:
+        news = News.objects.all()
     paginator = Paginator(news, 10)
 
     page_number = request.GET.get('page', 1)
@@ -37,9 +46,15 @@ def index(request):
         for i,lk in enumerate(a.link):
             title = a.title[i]
             link = a.link[i]
-            News.objects.create(
-                title=title, link=link
-            )
+            try:
+                if News.objects.filter(title=title, link=link).exists():
+                    continue
+                else:
+                    News.objects.create(
+                        title=title, link=link
+                    )
+            except:
+                print("False")
     
     context = {
         'page_object':page,
@@ -85,9 +100,31 @@ class NewsDeleteView(DeleteView):
     success_url = reverse_lazy('index')
 
 
+def add_comment_to_news(request, pk):
+    news = get_object_or_404(News, pk=pk)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.news = news
+            comment.save()
+            return redirect('news_detail', pk=news.pk)
+    else:
+        form = CommentForm()
+    return render(request, 'add_comment_to_post.html', {'form': form})
 
 
+class NewsLikeToggle(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        id_ =self.kwargs.get("pk")
+        obj=get_object_or_404(News, pk=id_)
+        url_= "/"
+        user = self.request.user
+        if user.is_authenticated:
+            if user in obj.likes.all():
+                obj.likes.remove(user)
+            else:
+                obj.likes.add(user)
+        return url_
 
-
-    
 

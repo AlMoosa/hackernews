@@ -9,5 +9,11 @@
             {{ comment }}
         </p>
     {% endfor %}
+    <p> {{ news_detail.likes.count }} <a href="{{ news_detail.get_like_url }}">Like</a></p>
+    <a class="btn btn-default" href="{% url 'add_comment_to_news' pk=news_detail.pk  %}">Add comment</a>
+        
+
 </div>
+
+
 {% endblock %}

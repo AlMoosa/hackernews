@@ -1,5 +1,11 @@
 from django.urls import path
-from hackernews.views import index, SignUp, ProfileView, ProfileDetailView, NewsDetailView, NewsUpdateView, NewsDeleteView
+from hackernews.views import (
+        index, SignUp, ProfileView, 
+        ProfileDetailView, NewsDetailView, 
+        NewsUpdateView, NewsDeleteView,
+        add_comment_to_news,
+        NewsLikeToggle
+    )
 
 
 urlpatterns = [
@@ -10,4 +16,7 @@ urlpatterns = [
     path("news_detail/<int:pk>/", NewsDetailView.as_view(), name="news_detail"),
     path("news_edit/<int:pk>/", NewsUpdateView.as_view(), name="news_edit"),
     path('news_delete/<int:pk>/', NewsDeleteView.as_view(), name='news_delete'),
+    path('news/<int:pk>/comment/', add_comment_to_news, name='add_comment_to_news'),
+    path('news_detail/<int:pk>/like/', NewsLikeToggle.as_view(), name='news_like'),
+
 ]
