@@ -5,3 +5,6 @@ psycopg2-binary
 python-decouple
 django-crispy-forms
 djangorestframework
+bs4
+requests
+lxml
