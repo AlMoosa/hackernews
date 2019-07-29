@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from requests import Response
+from rest_framework.permissions import IsAuthenticated
+
 from hackernews.forms import UserSignUpForm, UpdateForm, CommentForm
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, RedirectView
-from hackernews.models import Profile , User, News
+from hackernews.models import Profile , User, News, Comment
 from hackernews.scraping import Parser
 from django.core.paginator import Paginator
 from django.db.models import Q
-from rest_framework import generics
-from hackernews.serializers import NewsSerializer
+from rest_framework import generics, status
+from hackernews.serializers import NewsSerializer, CommentSerializer, CommentCreateSerializer
+from hackernews.paginator import HackerNewsViewPagination
 
 def main(request):
     return render(request, 'main.html', {})
@@ -76,8 +80,6 @@ class NewsUpdateView(UpdateView):
     template_name = "news_edit.html"
     context_object_name = "news_edit"
 
-    
-
 
 class SignUp(CreateView):
     form_class = UserSignUpForm
@@ -132,4 +134,35 @@ class NewsLikeToggle(RedirectView):
 class NewsListViewSerializer(generics.ListAPIView):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
+    pagination_class = HackerNewsViewPagination
+
+
+class NewsDetailViewSerializer(generics.RetrieveAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+
+
+class NewsUpdateViewSerializer(generics.UpdateAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+
+
+class NewsDeleteViewSerializer(generics.DestroyAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+
+
+class CommentListViewSerializer(generics.ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+
+class CommentCreateViewSerializer(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CommentCreateSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
 
